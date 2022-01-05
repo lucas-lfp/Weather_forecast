@@ -15,17 +15,15 @@ import warnings
 from IPython.display import Markdown, display
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.preprocessing import LabelEncoder
-from sklearn import preprocessing
+from sklearn import preprocessing, metrics, ensemble
 from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn import ensemble
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling  import RandomOverSampler
 from sklearn.ensemble import RandomForestClassifier
-from sklearn import metrics
 from sklearn.metrics import classification_report, confusion_matrix
 from tensorflow.keras.layers import Input, Dense 
 from tensorflow.keras.models import Model
-import time
+from sklearn.metrics import accuracy_score, f1_score, recall_score
 
 warnings.filterwarnings('ignore')
 sns.set_theme({'legend.frameon':True})
@@ -1498,7 +1496,7 @@ elif nav == "Deep learning":
     
     elif param_DL == "neurones":
         st.markdown("""<h2><center><u>EFFET DU NOMBRE DE NEURONES SUR LE MODÈLE DE DEEP LEARNING</u></h2></center>
-        <h4><u><font color = 'navy'>Récapitulatif du premièr modèle :</font></u></h4>
+        <h4><u><font color = 'navy'>Récapitulatif du premier modèle :</font></u></h4>
         <ul><li>Prédiction jour de pluie - précision : <b>76,4 %</b> ;  recall : <b>47,6 %</b></li>
         <li>Prédiction jour de pluie - précision : <b>86,9 %</b> ;  recall : <b>96,0 %</b></li></ul>
         <br/><i>modélisation en cours...</i>🐊""", unsafe_allow_html = True)
@@ -1577,7 +1575,7 @@ elif nav == "Deep learning":
         
     elif param_DL == "epochs":
         st.markdown("""<h2><center><u>EFFET DU NOMBRE D'EPOCHS SUR LE MODÈLE DE DEEP LEARNING</u></h2></center>
-        <h4><u><font color = 'navy'>Récapitulatif du premièr modèle :</font></u></h4>
+        <h4><u><font color = 'navy'>Récapitulatif du premier modèle :</font></u></h4>
         <ul><li>Prédiction <b>jour de pluie</b> - précision : <b>76,4 %</b> ;  recall : <b>47,6 %</b></li>
         <li>Prédiction jour <b>sans pluie</b> - précision : <b>86,9 %</b> ;  recall : <b>96,0 %</b></li></ul>
         <br/><i>modélisation en cours...</i>🐊""", unsafe_allow_html = True)
@@ -1657,7 +1655,7 @@ elif nav == "Deep learning":
         
     elif param_DL == "batch":
         st.markdown("""<h2><center><u>EFFET DE LA TAILLE DES BATCHS SUR LE MODÈLE DE DEEP LEARNING</u></h2></center>
-        <h4><u><font color = 'navy'>Récapitulatif du premièr modèle :</font></u></h4>
+        <h4><u><font color = 'navy'>Récapitulatif du premier modèle :</font></u></h4>
         <ul><li>Prédiction <b>jour de pluie</b> - précision : <b>76,4 %</b> ;  recall : <b>47,6 %</b></li>
         <li>Prédiction <b>jour sans pluie</b> - précision : <b>86,9 %</b> ;  recall : <b>96,0 %</b></li></ul>
         <br/><i>modélisation en cours...</i>🐊""", unsafe_allow_html = True)
@@ -1808,7 +1806,7 @@ elif nav == "Deep learning":
             round(100*precis["0"]["precision"],2),
             round(100*precis["0"]["recall"],2),
             round(100*precis["accuracy"],2)
-        ), unsafe_allow_markdown = True)
+        ), unsafe_allow_html = True)
         
         st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Rapport de classification</p</b></i>", unsafe_allow_html = True)
         st.write(classification_report(y_test_class, y_pred_class))
@@ -1817,7 +1815,7 @@ elif nav == "Deep learning":
         
     elif param_DL == "couches":
         st.markdown("""<h2><center><u>EFFET DU NOMBRE DE COUCHES DE NEURONES SUR LE MODÈLE DE DEEP LEARNING</u></h2></center>
-        <h4><u><font color = 'navy'>Récapitulatif du premièr modèle :</font></u></h4>
+        <h4><u><font color = 'navy'>Récapitulatif du premier modèle :</font></u></h4>
         <ul><li>Prédiction <b>jour de pluie</b> - précision : <b>76,4 %</b> ;  recall : <b>47,6 %</b></li>
         <li>Prédiction <b>jour sans pluie</b> - précision : <b>86,9 %</b> ;  recall : <b>96,0 %</b></li></ul>
         <br/><i>modélisation en cours...</i>🐊""", unsafe_allow_html = True)
@@ -1898,11 +1896,465 @@ elif nav == "Deep learning":
         st.write(confusion_matrix(y_test_class, y_pred_class))
     
 elif nav == "Les filouteries de Lise aka Kangooroo-Girl":
-     st.image(
-            "https://st.depositphotos.com/1033604/2008/i/600/depositphotos_20086857-stock-photo-kangaroo-posing-very-much-like.jpg",
-            width=800,
-        )
+
+    st.title('MACHINE LEARNING ☔🐨')
+        
+    st.markdown("Application d'un Random Forest après un cleaning plus approfondi et analyses des résultats.")
+        
+    ## CLEANING ##
     
+    st.markdown('<h2><u><center>Data cleaning</center></u></h2>', unsafe_allow_html=True)
+    
+    # Importation du fichier
+    st.markdown("Importation des données et étude des valeurs manquantes.")
+    
+    df_0 = pd.read_csv("weatherAUS.csv")
+    df = pd.read_csv("weatherAUS_clean1.csv")
+    pd.set_option('max_columns', None) 
+        
+    st.markdown('<h4><font color = "navy"><u>Gestion des valeurs manquantes</u></font></h4>', unsafe_allow_html=True)
+    
+    nan_val = st.button("Voir la répartition des NaN selon les variables")
+        
+    if nan_val: 
+        st.table(df_0.isnull().sum())
+    else:
+        st.markdown("")
+                
+    st.markdown("""<ul>
+                <li>Suppression des variables: <i>Rainfall</i>, <i>WindGustSpeed</i>, <i>Cloud9am</i>, <i>Cloud3pm, <i>Pressure9am</i>, <i>Pressure3pm</i>, <i>Evaporation</i>, <i>Sunshine</i>.</li>
+                <li>Variables quantitatives: moyenne par station/mois/années via un regroupement de données.</li>
+                </ul>""", unsafe_allow_html = True)
+                
+    # 1/ SUPPRESSION DES VARIABLES PRESENTANT TROP DE NaN
+    df_0 = df_0.drop(['Rainfall', 'WindGustSpeed', 'Cloud9am', 'Cloud3pm', 'Pressure9am', 'Pressure3pm', 
+                  'Evaporation', 'Sunshine'], axis = 1)
+    
+    # 2/ VARIABLES RESTANTES: SUPPRESSION OU REMPLACEMENT DES NaN
+    
+    # Suppression des NaN pour les variables 'RainToday' et 'RainTomorrow': 
+    df_0.dropna(axis = 0, how = 'any', subset = ['RainToday', 'RainTomorrow'], inplace = True)
+    
+    
+    # Pour le remplacement, on a besoin des dates (on supprimera ces colonnes par la suite): 
+    # Nouvelles variables pour les dates:
+    df_0['year'] = pd.to_datetime(df_0.Date).dt.year
+    df_0['month'] = pd.to_datetime(df_0.Date).dt.month
+    df_0['day'] = pd.to_datetime(df_0.Date).dt.day
+    
+    df_0.drop('Date', axis = 1, inplace = True ) # suppression de la variable "Date" qui ne servira plus. 
+    
+    # Min/MaxTemp; Temp9am/3pm; Humidity 9am/3pm: remplacement des NaN par moyenne par Station, par Mois, par Année:
+    
+    mean_per_location = df_0.groupby(['Location','month', 'year']).mean().reset_index()
+    
+    mean_loc = st.button("Voir le regroupement des données")
+    if mean_loc: 
+        st.dataframe(data = mean_per_location)
+    else:
+        st.markdown("")  
+        
+    df_saved = pd.read_csv("weatherAUS_clean1.csv")
+    Loc = ['Albury', 'BadgerysCreek', 'Cobar', 'CoffsHarbour', 'Moree','Newcastle', 'NorahHead', 'NorfolkIsland', 
+       'Penrith', 'Richmond', 'Sydney', 'SydneyAirport', 'WaggaWagga', 'Williamtown', 'Wollongong', 'Canberra', 
+       'Tuggeranong', 'MountGinini', 'Ballarat', 'Bendigo', 'Sale', 'MelbourneAirport', 'Melbourne', 'Mildura', 
+       'Nhil', 'Portland', 'Watsonia', 'Dartmoor', 'Brisbane', 'Cairns', 'GoldCoast', 'Townsville', 'Adelaide', 
+       'MountGambier', 'Nuriootpa', 'Woomera', 'Albany', 'Witchcliffe', 'PearceRAAF', 'PerthAirport', 'Perth', 
+       'SalmonGums', 'Walpole', 'Hobart', 'Launceston', 'AliceSprings', 'Darwin', 'Katherine', 'Uluru']
+
+    stat_erased = []
+
+    for loc in Loc:
+        if loc not in df.Location.unique():
+            stat_erased.append(loc)  
+
+    # Suppression des variables relatives à la date ou à la station, car ne serviront pas pour le reste du notebook.
+    df.drop(['Location', 'year', 'month', 'day'], axis = 1, inplace = True)
+        
+    col = st.button("Voir les variables restantes après cleaning")
+        
+    if col:
+        st.table(data = df.columns)
+    else:
+        st.write("")
+    
+    st.markdown('<h4><font color = "navy"><u>Bilan après nettoyage du dataset</u></font></h4>', unsafe_allow_html=True)
+    st.markdown("""<ul>
+                <li>Nombre d'entrées finales, non nulles: <b>{}</b></li>
+                <li>Deux stations supprimées : <b>{}</b></li>
+                <li>Conservation de <b>84 %</b> des données.
+                </ul>
+                """.format(len(df),stat_erased), unsafe_allow_html = True)
+
+    st.markdown('<h2><center><u>Modélisation Random Forest</u> 🌳🌧️🌳</center></h2>', unsafe_allow_html=True)
+    
+    # PREPARATION POUR MACHINE LEARNING
+    st.markdown('<h4><font color = "navy"><u>Préparation des données</u></font></h4>', unsafe_allow_html=True)
+    st.markdown("""<ul>
+                <li>Encodage des données qualitatives</li>
+                <li>Séparation des données (variables explicatives <i>vs</i> target, ici <i>RainTomorrow</i>)</li>
+                <li>Division en un ensemble d'apprentissage (80%) et un ensemble de test (20%)</li>
+                <li>Rééquilibrage (ou non) des données par Over et/ou Undersampling.</li>
+                </ul>
+                """, unsafe_allow_html = True)
+    
+    # Préparation des données
+    # RainToday et RainTomorrow:
+    df.replace(['Yes', 'No'], [1, 0], inplace = True)
+    
+    # POUR LA DIRECTION DU VENT: 
+    wind = df['WindGustDir'].unique()
+    
+    label = preprocessing.LabelEncoder() 
+    
+    labels = label.fit_transform(wind)
+    
+    df.replace(wind, labels, inplace = True)
+    
+    
+    # Séparation des données : 
+    data, target = df.drop('RainTomorrow', axis = 1), df['RainTomorrow']
+    
+    # On sépare les données en un ensemble d'apprentissage et un ensemble de test, avec le ratio 80/20
+    X_train, X_test, y_train, y_test = train_test_split(data, target, test_size = 0.2, random_state=42)
+       
+    
+    # Rééquilibrage des données: 3 possibilités testées
+    
+    over = RandomOverSampler(sampling_strategy = 0.6) # Fraction 60/40 
+    under = RandomUnderSampler() 
+    
+    # a) Over puis under Sample
+    X_ov, y_ov = over.fit_resample(X_train, y_train) 
+    
+    X_ov2, y_ov2 = over.fit_resample(X_train, y_train)
+    X_res, y_res = under.fit_resample(X_ov2, y_ov2) 
+    
+    
+    # b) Seulement un under Sample:
+    X_un, y_un = under.fit_resample(X_train, y_train)
+    
+    
+    donnees_choisies = st.selectbox(label = "Voir le résultat d'un rééquilibrage:", options=["Type de rééquilibrage", "Pas de rééquilibrage", "OverSampling", "UnderSampling", "Over + UnderSampling"])
+    
+    if donnees_choisies == "Type de rééquilibrage":
+        st.write("")
+    elif donnees_choisies == "Pas de rééquilibrage":
+        st.write("Nombre d'entrées par classe:", y_train.value_counts(),"\nPourcentages:", np.round(y_train.value_counts(normalize = True)*100, decimals = 1))
+    elif donnees_choisies == "OverSampling":
+        st.write("Nombre d'entrées par classe:", y_ov.value_counts(),"\nPourcentages:", np.round(y_ov.value_counts(normalize = True)*100, decimals = 1))
+    elif donnees_choisies == "UnderSampling":
+        st.write("Nombre d'entrées par classe:", y_un.value_counts(),"\nPourcentages:", np.round(y_un.value_counts(normalize = True)*100, decimals = 1))
+    else: st.write("Nombre d'entrées par classe:", y_res.value_counts(),"\nPourcentages:", np.round(y_res.value_counts(normalize = True)*100, decimals = 1))
+
+    st.markdown('<h4><font color = "navy"><u>Modèles et performances</u></font></4h>', unsafe_allow_html=True)
+    
+
+    st.markdown("Instanciation, entraînement et analyse des performances du modèle *Random Forest* sur les différentes préparations des données (pour comparaison).")
+    
+
+    
+
+    rf1 = RandomForestClassifier()
+    rf1.fit(X_train, y_train)
+    y_pred1 = rf1.predict(X_test)
+    st.markdown("<h6><i>Données non équilibrées</i></h6>", unsafe_allow_html = True)
+    st.markdown("""<ul>
+                <li>Accuracy : <b>{} %</b></li>
+                <li>f1_score : <b>{} %</b></li>
+                <li>Rappel : <b>{} %</b>
+                """.format(
+                (accuracy_score(y_test, y_pred1)*100).round(),
+                (f1_score(y_test, y_pred1)*100).round(),
+                (recall_score(y_test, y_pred1)*100).round()), unsafe_allow_html = True)
+
+    
+
+    rf2 = RandomForestClassifier()
+    rf2.fit(X_ov, y_ov)
+    y_pred2 = rf2.predict(X_test)
+    st.markdown("<h6><i>Oversampling</i></h6>", unsafe_allow_html = True)
+
+    st.markdown("""<ul>
+                <li>Accuracy : <b>{} %</b></li>
+                <li>f1_score : <b>{} %</b></li>
+                <li>Rappel : <b>{} %</b>
+                """.format(
+                (accuracy_score(y_test, y_pred2)*100).round(),
+                (f1_score(y_test, y_pred2)*100).round(),
+                (recall_score(y_test, y_pred2)*100).round()), unsafe_allow_html = True)
+    
+
+    rf3 = RandomForestClassifier()
+    rf3.fit(X_un, y_un)
+    y_pred3 = rf3.predict(X_test)
+    st.markdown("<h6><i>Undersampling</i></h6>", unsafe_allow_html = True)
+    st.markdown("""<ul>
+                <li>Accuracy : <b>{} %</b></li>
+                <li>f1_score : <b>{} %</b></li>
+                <li>Rappel : <b>{} %</b>
+                """.format(
+                (accuracy_score(y_test, y_pred3)*100).round(),
+                (f1_score(y_test, y_pred3)*100).round(),
+                (recall_score(y_test, y_pred3)*100).round()), unsafe_allow_html = True)
+    
+
+    rf4 = RandomForestClassifier()
+    rf4.fit(X_res, y_res)
+    y_pred4 = rf4.predict(X_test)
+    st.markdown("<h6><i>Oversampling + undersampling</i></h6>", unsafe_allow_html = True)
+    st.markdown("""<ul>
+                <li>Accuracy : <b>{} %</b></li>
+                <li>f1_score : <b>{} %</b></li>
+                <li>Rappel : <b>{} %</b>
+                """.format(
+                (accuracy_score(y_test, y_pred4)*100).round(),
+                (f1_score(y_test, y_pred4)*100).round(),
+                (recall_score(y_test, y_pred4)*100).round()), unsafe_allow_html = True)
+           
+     
+    st.markdown('<h4><font color = "navy"><u>Conclusion</u></font</h4>', unsafe_allow_html=True)     
+    
+    st.markdown("Pour la suite, seul le modèle le plus concluant est conservé : <br>&#10132; modélisation <b>Random Forest</b> sur données équilibrées par <b><i>oversampling</i></b> puis <b><i>undersampling</i></b>.<br>Ce modèle sera celui appliqué pour la suite.", unsafe_allow_html = True)
+    
+    
+    # MATRICE DE CONFUSION
+    rf_final = RandomForestClassifier()
+    rf_final.fit(X_res, y_res)
+    y_pred_final = rf_final.predict(X_test)
+    
+    st.markdown("<h6><i>Matrice de confusion</i></h6>", unsafe_allow_html = True)
+    st.table(pd.crosstab(y_test, y_pred_final, rownames = ['Classe réelle'], colnames = ['Classe prédite']))
+    
+    st.markdown('<h2><u><center>Analyses : feature importance & comparaison VP/FN</center></u></h2>', unsafe_allow_html=True)
+    
+    
+    st.markdown('<h4><font color = "navy"><u>Feature Importance</u></font></h4>', unsafe_allow_html=True)
+    
+    rf5 = RandomForestClassifier()
+    rf5.fit(X_res, y_res)
+    y_pred5 = rf5.predict(X_test)
+        
+    importances = rf5.feature_importances_
+    
+    impor=pd.DataFrame(data=(importances), index=data.columns, columns=['Importance'])
+    impor=impor.sort_values(by='Importance', ascending=False).T
+    
+    
+    st.table(impor.head(8))
+    
+    
+    st.markdown('<h4><font color = "navy"><u>Comparaison VP versus FN</u></font></h4>', unsafe_allow_html=True)
+    
+    st.markdown("""Dans cette analyse, les prédictions sont comparées par rapport aux <b>jours réels de pluie</b> 
+                <i>RainTomorrow</i> =1). Nous comparons les <b>Vrais Positifs</b> (bonne prédiction de pluie à j+1) aux <b>Faux Négatifs</b> 
+                (prédiction d'un jour sec à j+1 alors qu'il aura plu). Nous voulons voir, ne serait-ce que graphiquement,
+                si certains patterns se dégagent de cette comparaison et pourraient nous aiguiller sur une amélioration 
+                des performances du modèle.""", unsafe_allow_html = True)
+    
+    # ANALYSE DES FN et FP
+    
+    # y_pred to DataFrame, index of y_test to join to X_test df
+    predictions = pd.DataFrame(y_pred5).set_index(y_test.index)
+    predictions.columns = ['predictions']
+    
+    df_rain = [y_test, predictions]
+    
+    # New df with X_test, y_test & y_pred
+    df_compare = X_test.join(other = df_rain).reset_index()
+    
+    
+    df_compare.drop('index', axis = 1,  inplace = True)
+    
+    # SUBDATAFRAMES:
+    VN = df_compare[(df_compare['RainTomorrow'] == 0) & (df_compare['predictions'] == 0)]
+    VP = df_compare[(df_compare['RainTomorrow'] == 1) & (df_compare['predictions'] == 1)] # intéressant à analyser
+    FP = df_compare[(df_compare['RainTomorrow'] == 0) & (df_compare['predictions'] == 1)] #intéressant à analyser
+    FN = df_compare[(df_compare['RainTomorrow'] == 1) & (df_compare['predictions'] == 0)]
+    
+    FN_VP = pd.concat([FN, VP], axis = 0)
+    
+    
+    st.markdown('<h5><i>Comparaison des VP versus FN sur les variables quantitatives (températures, humidité, vitesse du vent):</i></h5>', unsafe_allow_html=True)
+
+    
+    my_colors = ["#3adfb2", "#9dacf6"]
+      
+    # add color array to set_palette
+    # function of seaborn
+    sns.set_palette( my_colors )
+    
+        
+    st.markdown("<h6><i>Températures</i></h6>", unsafe_allow_html = True)
+    fig1, axes = plt.subplots(2, 2, figsize=(35, 35))
+
+    plt.subplot(221)
+    sns.boxplot(data=FN_VP, x='predictions', y='MinTemp')
+    plt.xticks(size = 20)
+    plt.xlabel('Prédictions \n(valeur réelle = 1, soit "pluie le lendemain")', fontsize=30)
+    plt.ylabel('MinTemp', fontsize=30)
+    plt.yticks(size = 20);
+
+    plt.subplot(222)    
+    sns.boxplot(data=FN_VP, x='predictions', y='MaxTemp')
+    plt.xticks(size = 20)
+    plt.xlabel('Prédictions \n(valeur réelle = 1, soit "pluie le lendemain")', fontsize=30)
+    plt.ylabel('MaxTemp', fontsize=30)
+    plt.yticks(size = 20);
+
+    plt.subplot(223)
+    sns.boxplot(data=FN_VP, x='predictions', y='Temp9am')
+    plt.xticks(size = 20)
+    plt.xlabel('Prédictions \n(valeur réelle = 1, soit "pluie le lendemain")', fontsize=30)
+    plt.ylabel('Temp9am', fontsize=30)
+    plt.yticks(size = 20);
+
+    plt.subplot(224)
+    sns.boxplot(data=FN_VP, x='predictions', y='Temp3pm');
+    plt.xticks(size = 20)
+    plt.xlabel('Prédictions \n(valeur réelle = 1, soit "pluie le lendemain")', fontsize=30)
+    plt.ylabel('Temp3pm', fontsize=30)
+    plt.yticks(size = 20);
+
+    st.pyplot(fig1)
+    st.markdown("Les VP montrent des valeurs de températures globalement plus basses que les FN. \nLes températures maximales semblent biaiser le modèle vers la prédiction d'un temps sec.")
+
+    st.markdown("<h6><i>Humidité</i></h6>", unsafe_allow_html = True)
+
+    #HUMIDITÉ
+    fig2, axes = plt.subplots(1, 2, figsize=(35, 23))
+
+    plt.subplot(121)
+    sns.boxplot(data=FN_VP, x='predictions', y='Humidity9am')
+    plt.xticks(size = 20)
+    plt.xlabel('Prédictions \n(valeur réelle = 1, soit "pluie le lendemain")', fontsize=30)
+    plt.ylabel('Humidity9am', fontsize=30)
+    plt.yticks(size = 20);
+
+    plt.subplot(122)
+    sns.boxplot(data=FN_VP, x='predictions', y='Humidity3pm')
+    plt.xticks(size = 20)
+    plt.xlabel('Prédictions \n(valeur réelle = 1, soit "pluie le lendemain")', fontsize=30)
+    plt.ylabel('Humidity3pm', fontsize=30)
+    plt.yticks(size = 20);
+    
+    st.pyplot(fig2)
+    st.markdown("Les FN montrent des taux d'humidité plus bas que les VP. La faible humidité semble donc biaiser le modèle vers la prédiction d'un temps sec.\nDe plus il y a un grand nombre de valeurs extrêmes/aberrantes.")
+
+    st.markdown("<h6><i>Vitesse du vent</i></h6>", unsafe_allow_html = True)
+
+    fig3, axes = plt.subplots(1, 2, figsize=(35, 23))
+    plt.subplot(121)
+    sns.boxplot(data=FN_VP, x='predictions', y='WindSpeed9am')
+    plt.xticks(size = 20)
+    plt.xlabel('Prédictions \n(valeur réelle = 1, soit "pluie le lendemain")', fontsize=30)
+    plt.ylabel('WindSpeed9am', fontsize=30)
+    plt.yticks(size = 20);
+
+    plt.subplot(122)
+    sns.boxplot(data=FN_VP, x='predictions', y='WindSpeed3pm')
+    plt.xticks(size = 20)
+    plt.xlabel('Prédictions \n(valeur réelle = 1, soit "pluie le lendemain")', fontsize=30)
+    plt.ylabel('WindSpeed3pm', fontsize=30)
+    plt.yticks(size = 20);
+    
+    st.pyplot(fig3)
+    st.markdown("Les VP semblent montrer des vents plus rapides que les FN.\nLes faibles vitesses de vents pourraient donc biaiser le modèle vers la prédiction d'un temps sec.\nDe plus nous remarquons un certain nombre de valeurs extrêmes/aberrantes.")
+    
+    st.markdown("<h6><i>Conclusion</i></h6>", unsafe_allow_html = True)
+    st.markdown("""Globalement nous pouvons remarquer que le comportement de certaines variables peut biaiser 
+                    les résultats du modèle, ici en faveur de la prédiction d'un temps sec.<br>Nous remarquons également 
+                    un certain nombre de valeurs extrêmes pour chacune de ces variables qui pourraient empêcher le 
+                    modèle de dégager des tendances pour les prédictions.<br>Nous voyons donc ici les limites du set 
+                    de données malgré le travail de data cleaning.""", unsafe_allow_html = True)
+     
+    st.markdown('<h5><i>Comparaison des VP versus FN sur les variables qualitatives (direction des bourrasques de vent, direction du vent à 9h et 15h):</i></h5>', unsafe_allow_html=True)
+        
+    VP1 = FN_VP[FN_VP['predictions'] == 1]
+    FN1 = FN_VP[FN_VP['predictions'] == 0]
+        
+    # WINDGUSTDIR
+    bins = range(0, 17)
+    ticks = range(0, 16)
+        
+
+        
+    st.markdown("<h6><i>Direction des bourrasques</i></h6>", unsafe_allow_html= True)
+    fig4, axes = plt.subplots(1, 2, figsize=(40, 17))
+   
+    plt.subplot(121)
+    plt.hist(VP1['WindGustDir'], bins = bins, color = 'b', edgecolor='grey', label = "VP WindGustDir"); #rwidth = 0.8
+    plt.xticks(ticks, wind, rotation = 50);
+    plt.xticks(size = 20)
+    plt.yticks(size = 20)
+    plt.legend(prop={'size': 20});
+
+    plt.subplot(122)
+    plt.hist(FN1['WindGustDir'], bins = range(0, 17), color = 'c', edgecolor='grey', label = 'FN WindGustDir'); #rwidth = 0.8
+    plt.xticks(range(0, 16), wind, rotation = 50);
+    plt.xticks(size = 20)
+    plt.yticks(size = 20)
+    plt.legend(prop={'size': 20});
+
+    st.pyplot(fig4)
+    st.markdown("Les bourrasques de vents Est, Est-Sud-Est et Sud-Sud-West notamment, semblent plus fréquentes et plus fortes pour les VP par rapport aux FN.")
+
+    st.markdown("<h6><i>Direction du vent à 9h</i></h6>", unsafe_allow_html = True)
+    # WindDir9am
+    fig5, axes = plt.subplots(1, 2, figsize=(40, 17))
+    
+    plt.subplot(121)
+    plt.hist(VP1['WindDir9am'], bins = range(0, 17), color = 'b', edgecolor='grey', label = 'VP WindDir9am'); #rwidth = 0.8
+    plt.xticks(range(0, 16), wind, rotation = 50)
+    plt.xticks(size = 20)
+    plt.yticks(size = 20)
+    plt.legend(prop={'size': 20});
+
+    plt.subplot(122)
+    plt.hist(FN1['WindDir9am'], bins = range(0, 17), color = 'c', edgecolor='grey', label = 'FN WindDir9am'); #rwidth = 0.8
+    plt.xticks(range(0, 16), wind, rotation = 50)
+    plt.xticks(size = 20)
+    plt.yticks(size = 20)
+    plt.legend(prop={'size': 20});
+
+    st.pyplot(fig5)
+    st.markdown("Le Vent Nord-Est matinal est beaucoup plus fréquent et ressort d'autant plus pour les VP par rapport aux FN.")
+
+
+    st.markdown("<h6><i>Direction du vent à 15h</i></h6>", unsafe_allow_html = True)
+    fig6, axes = plt.subplots(1, 2, figsize=(40, 17))
+    
+    plt.subplot(121)
+    plt.hist(VP1['WindDir3pm'], bins = range(0, 17), color = 'b', edgecolor='grey', label = 'VP WindDir3pm'); #rwidth = 0.8
+    plt.xticks(range(0, 16), wind, rotation = 50)
+    plt.xticks(size = 20)
+    plt.yticks(size = 20)
+    plt.legend(prop={'size': 20});
+
+    plt.subplot(122)   
+    plt.hist(FN1['WindDir3pm'], bins = range(0, 17), color = 'c', edgecolor='grey', label = 'FN WindDir3pm'); #rwidth = 0.8
+    plt.xticks(range(0, 16), wind, rotation = 50)
+    plt.xticks(size = 20)
+    plt.yticks(size = 20)
+    plt.legend(prop={'size': 20});
+
+    st.pyplot(fig6)
+    st.markdown("Plusieurs vents d'Est en après-midi semblent plus fréquents pour les Vrais Positifs.")
+
+    
+    st.markdown("<h6><i>Conclusion variables qualitatives (vents)</i></h6>", unsafe_allow_html = True)
+    st.markdown("Il semble que certaines directions soient plus fréquentes pour les VP par rapport aux FN. Une moindre fréquence de ces vents semble donc biaiser le modèle en faveur de la prédiction d'un temps sec.")
+    
+    
+    st.markdown("<h4><font color = 'navy'><u>Conclusion de ces analyses</u></font></h4>", unsafe_allow_html = True)
+    st.markdown("""Pour plus de rigueur, des tests statistiques devraient être réalisés pour mesurer la 
+                significativité des différences entre VP et FN.\nUne analyse des VN et FP aurait aussi pu être réalisée.
+                <br>Suite à cette analyse, de nouvelles variables ont été créées 
+                (différences de températures, d'humidité...) mais n'ont pas amélioré, voire ont diminué la performance 
+                 du modèle. <br>Par la suite, nous avons tenté de récupérer des variables jusqu'alors supprimées, 
+                 en améliorant l'étape de cleaning via le regroupement des stations par exemple.""", unsafe_allow_html = True)
+
+   
 
 elif nav == "🐰":
     st.image(
