@@ -894,7 +894,7 @@ elif nav == "Description du dataset":
         st.pyplot(fig_pression_1);
         
         #boxplots
-        st.markdown("<h5><i>Distribution comparée en fonction de la pluie</i></h5>", unsafe_allow_hmtl = True)
+        st.markdown("<h5><i>Distribution comparée en fonction de la pluie</i></h5>", unsafe_allow_html = True)
         fig_pression_2 = plt.figure(figsize = (12,6))
         
         plt.subplot(121)
