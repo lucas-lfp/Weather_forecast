@@ -1311,9 +1311,9 @@ elif nav == "Machine learning : essai d'amélioration":
             round(100*precis["0"]["f1-score"],2),
             round(100*precis["accuracy"],2)
         ), unsafe_allow_html = True)
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Rapport de classification</p></b></i>", unsafe_allow_html = True)
+        st.markdown("<h5><i>Rapport de classification</i></h5>", unsafe_allow_html = True)
         st.write(metrics.classification_report(y_test, y_pred1))
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Matrice de confusion</p></b></i>", unsafe_allow_html = True)
+        st.markdown("<h5><i>Matrice de confusion</i></h5>", unsafe_allow_html = True)
         st.write(pd.crosstab(y_test, y_pred1, rownames = ['Classe réelle'], colnames = ['Classe prédite']))
         
         # ENTRAÎNEMENT DU MODÈLE avec solution b) UnderSample
@@ -1345,9 +1345,9 @@ elif nav == "Machine learning : essai d'amélioration":
             round(100*precis["accuracy"],2)
         ), unsafe_allow_html = True)
         
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Rapport de classification</p></b></i>", unsafe_allow_html = True)
+        st.markdown("<h5><i>Rapport de classification</i></h5>", unsafe_allow_html = True)
         st.write(metrics.classification_report(y_test, y_pred2))
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Matrice de confusion</p></b></i>", unsafe_allow_html = True)
+        st.markdown("<h5><i>Matrice de confusion</i></h5>", unsafe_allow_html = True)
         st.write(pd.crosstab(y_test, y_pred2, rownames = ['Classe réelle'], colnames = ['Classe prédite']))
         
         # ENTRAÎNEMENT DU MODÈLE avec solution c) OverSample
@@ -1379,9 +1379,9 @@ elif nav == "Machine learning : essai d'amélioration":
             round(100*precis["accuracy"],2)
         ), unsafe_allow_html = True)
         
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Rapport de classification</p></b></i>", unsafe_allow_html = True)
+        st.markdown("<h5><i>Rapport de classification</i></h5>", unsafe_allow_html = True)
         st.write(metrics.classification_report(y_test, y_pred3))
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Matrice de confusion</p></b></i>", unsafe_allow_html = True)
+        st.markdown("<h5><i>Matrice de confusion</i></h5>", unsafe_allow_html = True)
         st.write(pd.crosstab(y_test, y_pred3, rownames = ['Classe réelle'], colnames = ['Classe prédite']))
     
 
@@ -1411,487 +1411,484 @@ elif nav == "Deep learning":
     X_test_scaled = scaler.transform(X_test)
     st.markdown("<h4><u><font color = 'navy'>Exploration des différents modèles.</font></h4></u>", unsafe_allow_html=True)
     
-    param_DL = st.selectbox(label = "Choisissez le paramètre à moduler dans le menu ci-dessous 🦘",
-                                  options = ["premier modèle", "neurones", "epochs", "batch", "activation", "couches"])
+
+
+    st.markdown("""<h2><center><u>PREMIER MODÈLE DE DEEP LEARNING</u></h2></center>
+    <br/><i>modélisation en cours...</i>🐊
+    """, unsafe_allow_html = True)
+    EPOCHS = 6
+    BATCHS = 32
     
-    if param_DL == "premier modèle":
-
-        st.markdown("""<h2><center><u>PREMIER MODÈLE DE DEEP LEARNING</u></h2></center>
-        <br/><i>modélisation en cours...</i>🐊
-        """, unsafe_allow_html = True)
-        EPOCHS = 6
-        BATCHS = 32
-        
-        UNITS1 = 25
-        UNITS2 = 50
-        UNITS3 = None
-        UNITS4 = None
-        UNITS5 = None
-        UNITSOUT = 2
-        
-        ACTIV1 = "relu"
-        ACTIV2 = "relu"
-        ACTIV3 = None
-        ACTIV4 = None
-        ACTIV5 = None
-        
-        inputs = Input(shape = X_train_scaled.shape[1], name = "Input")
-        dense1 = Dense(units = UNITS1, activation = ACTIV1, kernel_initializer = "normal", name = "Dense_1")
-        dense2 = Dense(units = UNITS2, activation = ACTIV2, kernel_initializer = "normal", name = "Dense_2")
-        dense3 = Dense(units = UNITSOUT, activation = "softmax", name = "Dense_3")
-        
-        x = dense1(inputs)
-        x = dense2(x)
-        outputs = dense3(x)
-        
-        model = Model(inputs = inputs, outputs = outputs)
-        model.compile(loss = "sparse_categorical_crossentropy", optimizer = "adam", metrics = ["accuracy"])
-        training_history = model.fit(X_train_scaled, y_train, epochs = EPOCHS, batch_size = BATCHS, validation_data=(X_test_scaled,y_test))
-        
-        #calcul du score
-        #score = model.evaluate(X_test_scaled, y_test)
-        
-        #prédiction
-        test_pred = model.predict(X_test_scaled)
-        
-        y_test_class = y_test
-        y_pred_class = np.argmax(test_pred, axis = 1)
-        
-        #Résultats
-        precis = classification_report(y_test_class, y_pred_class,output_dict=True)
-        
-        #Output
-        st.markdown("<i><center>...modélisation terminée !🦘</center></i> ", unsafe_allow_html = True)
-
-        st.markdown("""<h4><u><font color = 'navy'>Récapitulatif du modèle :</font></u></h4>
-        Ce premier modèle avait 2 couches denses :
-        <ul><li>la première avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
-        <li> la seconde avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
-        <li> la couche de sortie comportait <b>2 neurones</b> et une fonction d'activation <b>softmax</b>.</li>
-        <li> apprentissage sur <b>{} epochs</b> par batch de <b>{}</b>.</li></ul>
-        """.format(UNITS1, ACTIV1, UNITS2, ACTIV2, EPOCHS, BATCHS), unsafe_allow_html = True)
-                
-        st.markdown("""<h4><u><font color = 'navy'>Résultats du modèle :</h4></u></font>
-        <ul><li> Prédiction des <b>jours de pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>)</li>
-        <li> Prédiction des <b>jours sans pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>).
-        <li>La précision globale du modèle est de <b>{} %</b>.</li></ul>
-        Les paramètres de ce premier modèle ont été fixés de façon plus ou moins arbritraire. Les 
-        performances de ce modèle sont globalement satisfaisantes, voire très satisfaisantes pour la détection des jours sans pluie.
-        Il serait toutefois intéressant d'améliorer la prédiction de jours de pluie.
-        """.format(
-            round(100*precis["1"]["precision"],2),
-            round(100*precis["1"]["recall"],2),
-            round(100*precis["0"]["precision"],2),
-            round(100*precis["0"]["recall"],2),
-            round(100*precis["accuracy"],2)
-        ), unsafe_allow_html = True)
-        
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Rapport de classification</p></b></i>", unsafe_allow_html = True)
-        st.write(classification_report(y_test_class, y_pred_class))
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Matrice de confusion</p></b></i>", unsafe_allow_html = True)
-        st.write(confusion_matrix(y_test_class, y_pred_class))
-        
+    UNITS1 = 25
+    UNITS2 = 50
+    UNITS3 = None
+    UNITS4 = None
+    UNITS5 = None
+    UNITSOUT = 2
     
-    elif param_DL == "neurones":
-        st.markdown("""<h2><center><u>EFFET DU NOMBRE DE NEURONES SUR LE MODÈLE DE DEEP LEARNING</u></h2></center>
-        <h4><u><font color = 'navy'>Récapitulatif du premier modèle :</font></u></h4>
-        <ul><li>Prédiction jour de pluie - précision : <b>76,4 %</b> ;  recall : <b>47,6 %</b></li>
-        <li>Prédiction jour de pluie - précision : <b>86,9 %</b> ;  recall : <b>96,0 %</b></li></ul>
-        <br/><i>modélisation en cours...</i>🐊""", unsafe_allow_html = True)
-        
-        EPOCHS = 6
-        BATCHS = 32
-        
-        UNITS1 = 250
-        UNITS2 = 500
-        UNITS3 = None
-        UNITS4 = None
-        UNITS5 = None
-        UNITSOUT = 2
-        
-        ACTIV1 = "relu"
-        ACTIV2 = "relu"
-        ACTIV3 = None
-        ACTIV4 = None
-        ACTIV5 = None
-        
-        inputs = Input(shape = X_train_scaled.shape[1], name = "Input")
-        dense1 = Dense(units = UNITS1, activation = ACTIV1, kernel_initializer = "normal", name = "Dense_1")
-        dense2 = Dense(units = UNITS2, activation = ACTIV2, kernel_initializer = "normal", name = "Dense_2")
-        dense3 = Dense(units = UNITSOUT, activation = "softmax", name = "Dense_3")
-        
-        
-        x = dense1(inputs)
-        x = dense2(x)
-        outputs = dense3(x)
-        
-        model = Model(inputs = inputs, outputs = outputs)
-        model.compile(loss = "sparse_categorical_crossentropy", optimizer = "adam", metrics = ["accuracy"])
-        training_history = model.fit(X_train_scaled, y_train, epochs = EPOCHS, batch_size = BATCHS, validation_data=(X_test_scaled,y_test))
-        
-        #calcul du score
-        score = model.evaluate(X_test_scaled, y_test)
-        
-        #prédiction
-        test_pred = model.predict(X_test_scaled)
-        
-        y_test_class = y_test
-        y_pred_class = np.argmax(test_pred, axis = 1)
-        
-        #Résultats
-        precis = classification_report(y_test_class, y_pred_class,output_dict=True)
-        
-        #Output
-        st.markdown("<i><center>...modélisation terminée !🦘</center></i> ", unsafe_allow_html = True)
+    ACTIV1 = "relu"
+    ACTIV2 = "relu"
+    ACTIV3 = None
+    ACTIV4 = None
+    ACTIV5 = None
+    
+    inputs = Input(shape = X_train_scaled.shape[1], name = "Input")
+    dense1 = Dense(units = UNITS1, activation = ACTIV1, kernel_initializer = "normal", name = "Dense_1")
+    dense2 = Dense(units = UNITS2, activation = ACTIV2, kernel_initializer = "normal", name = "Dense_2")
+    dense3 = Dense(units = UNITSOUT, activation = "softmax", name = "Dense_3")
+    
+    x = dense1(inputs)
+    x = dense2(x)
+    outputs = dense3(x)
+    
+    model = Model(inputs = inputs, outputs = outputs)
+    model.compile(loss = "sparse_categorical_crossentropy", optimizer = "adam", metrics = ["accuracy"])
+    training_history = model.fit(X_train_scaled, y_train, epochs = EPOCHS, batch_size = BATCHS, validation_data=(X_test_scaled,y_test))
+    
+    #calcul du score
+    #score = model.evaluate(X_test_scaled, y_test)
+    
+    #prédiction
+    test_pred = model.predict(X_test_scaled)
+    
+    y_test_class = y_test
+    y_pred_class = np.argmax(test_pred, axis = 1)
+    
+    #Résultats
+    precis = classification_report(y_test_class, y_pred_class,output_dict=True)
+    
+    #Output
+    st.markdown("<i><center>...modélisation terminée !🦘</center></i> ", unsafe_allow_html = True)
 
-        st.markdown("""<h4><u><font color = 'navy'>Récapitulatif du modèle :</h4></u></font>
-        Ce modèle avait 2 couches denses :
-        <ul><li>la première avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
-        <li> la seconde avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
-        <li> la couche de sortie comportait <b>2 neurones</b> et une fonction d'activation <b>softmax</b>.</li>
-        <li> apprentissage sur <b>{} epochs</b> par batch de <b>{}</b>.</li></ul>
-        """.format(UNITS1, ACTIV1, UNITS2, ACTIV2, EPOCHS, BATCHS), unsafe_allow_html = True)
-                
-        st.markdown("""<h4><u><font color = 'navy'>Résultats du modèle :</h4></u></font>
-        <ul><li> Prédiction des <b>jours de pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>).</li>
-        <li> Prédiction des <b>jours sans pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>).</li>
-        <li>La précision globale du modèle est de <b>{} %</b>.</li></ul>
-        Le simple ajout de neurones (ici 10 fois plus nombreux dans chaque couche par rapport au modèle initial) 
-        ne semble pas modifier les performances.
-        """.format(
-            round(100*precis["1"]["precision"],2),
-            round(100*precis["1"]["recall"],2),
-            round(100*precis["0"]["precision"],2),
-            round(100*precis["0"]["recall"],2),
-            round(100*precis["accuracy"],2)
-        ), unsafe_allow_html = True)
-        
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Rapport de classification</p</b></i>", unsafe_allow_html = True)
-        st.write(classification_report(y_test_class, y_pred_class))
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Matrice de confusion</p></b></i>", unsafe_allow_html = True)
-        st.write(confusion_matrix(y_test_class, y_pred_class))
-        
-    elif param_DL == "epochs":
-        st.markdown("""<h2><center><u>EFFET DU NOMBRE D'EPOCHS SUR LE MODÈLE DE DEEP LEARNING</u></h2></center>
-        <h4><u><font color = 'navy'>Récapitulatif du premier modèle :</font></u></h4>
-        <ul><li>Prédiction <b>jour de pluie</b> - précision : <b>76,4 %</b> ;  recall : <b>47,6 %</b></li>
-        <li>Prédiction jour <b>sans pluie</b> - précision : <b>86,9 %</b> ;  recall : <b>96,0 %</b></li></ul>
-        <br/><i>modélisation en cours...</i>🐊""", unsafe_allow_html = True)
-        
-        EPOCHS = 18
-        BATCHS = 32
-        
-        UNITS1 = 25
-        UNITS2 = 50
-        UNITS3 = None
-        UNITS4 = None
-        UNITS5 = None
-        UNITSOUT = 2
-        
-        ACTIV1 = "relu"
-        ACTIV2 = "relu"
-        ACTIV3 = None
-        ACTIV4 = None
-        ACTIV5 = None
-        
-        inputs = Input(shape = X_train_scaled.shape[1], name = "Input")
-        dense1 = Dense(units = UNITS1, activation = ACTIV1, kernel_initializer = "normal", name = "Dense_1")
-        dense2 = Dense(units = UNITS2, activation = ACTIV2, kernel_initializer = "normal", name = "Dense_2")
-        dense3 = Dense(units = UNITSOUT, activation = "softmax", name = "Dense_3")
-        
-        x = dense1(inputs)
-        x = dense2(x)
-        outputs = dense3(x)
-        
-        model = Model(inputs = inputs, outputs = outputs)
-        model.compile(loss = "sparse_categorical_crossentropy", optimizer = "adam", metrics = ["accuracy"])
-        training_history = model.fit(X_train_scaled, y_train, epochs = EPOCHS, batch_size = BATCHS, validation_data=(X_test_scaled,y_test))
-        
-        #calcul du score
-        score = model.evaluate(X_test_scaled, y_test)
-        
-        #prédiction
-        test_pred = model.predict(X_test_scaled)
-        
-        y_test_class = y_test
-        y_pred_class = np.argmax(test_pred, axis = 1)
-        
-        #Résultats
-        precis = classification_report(y_test_class, y_pred_class,output_dict=True)
-        
-        #Output
-        st.markdown("<i><center>...modélisation terminée !🦘</center></i> ", unsafe_allow_html = True)
+    st.markdown("""<h4><u><font color = 'navy'>Récapitulatif du modèle :</font></u></h4>
+    Ce premier modèle avait 2 couches denses :
+    <ul><li>la première avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
+    <li> la seconde avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
+    <li> la couche de sortie comportait <b>2 neurones</b> et une fonction d'activation <b>softmax</b>.</li>
+    <li> apprentissage sur <b>{} epochs</b> par batch de <b>{}</b>.</li></ul>
+    """.format(UNITS1, ACTIV1, UNITS2, ACTIV2, EPOCHS, BATCHS), unsafe_allow_html = True)
+            
+    st.markdown("""<h4><u><font color = 'navy'>Résultats du modèle :</h4></u></font>
+    <ul><li> Prédiction des <b>jours de pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>)</li>
+    <li> Prédiction des <b>jours sans pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>).
+    <li>La précision globale du modèle est de <b>{} %</b>.</li></ul>
+    Les paramètres de ce premier modèle ont été fixés de façon plus ou moins arbritraire. Les 
+    performances de ce modèle sont globalement satisfaisantes, voire très satisfaisantes pour la détection des jours sans pluie.
+    Il serait toutefois intéressant d'améliorer la prédiction de jours de pluie.
+    """.format(
+        round(100*precis["1"]["precision"],2),
+        round(100*precis["1"]["recall"],2),
+        round(100*precis["0"]["precision"],2),
+        round(100*precis["0"]["recall"],2),
+        round(100*precis["accuracy"],2)
+    ), unsafe_allow_html = True)
+    
+    st.markdown("<h5><i>Rapport de classification</i></h5>", unsafe_allow_html = True)
+    st.write(classification_report(y_test_class, y_pred_class))
+    st.markdown("<h5><i>Matrice de confusion</i></h5>", unsafe_allow_html = True)
+    st.write(confusion_matrix(y_test_class, y_pred_class))
+    
+    precis_1 = round(100*precis["1"]["precision"],2)
+    recall_1 = round(100*precis["1"]["recall"],2)
+    precis_0 = round(100*precis["0"]["precision"],2)
+    recall_0 = round(100*precis["0"]["recall"],2)
+    
 
-        st.markdown("""<h4><u><font color = 'navy'>Récapitulatif du modèle :</h4></u></font>
-        Ce modèle avait 2 couches denses :
-        <ul><li>la première avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
-        <li> la seconde avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
-        <li> la couche de sortie comportait <b>2 neurones</b> et une fonction d'activation <b>softmax</b>.</li>
-        <li> apprentissage sur <b>{} epochs</b> par batch de <b>{}</b>.</li></ul>
-        """.format(UNITS1, ACTIV1, UNITS2, ACTIV2, EPOCHS, BATCHS), unsafe_allow_html = True)
-        
-        model.summary()
-        
-        st.markdown("""<h4><u><font color = 'navy'>Résultats du modèle :</h4></u></font>
-        <ul><li> Prédiction des <b>jours de pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>)</li>
-        <li> Prédiction des <b>jours sans pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>).
-        <li>La précision globale du modèle est de <b>{} %</b>.</li></ul>
-        L'entrainement sur un nombre plus important d'epochs (ici 18 soit 3 fois plus par rapport au modèle initial) 
-        ne semble pas modifier les performances.
-        """.format(
-            round(100*precis["1"]["precision"],2),
-            round(100*precis["1"]["recall"],2),
-            round(100*precis["0"]["precision"],2),
-            round(100*precis["0"]["recall"],2),
-            round(100*precis["accuracy"],2)
-        ), unsafe_allow_html = True)
-        
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Rapport de classification</p</b></i>", unsafe_allow_html = True)
-        st.write(classification_report(y_test_class, y_pred_class))
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Matrice de confusion</p></b></i>", unsafe_allow_html = True)
-        st.write(confusion_matrix(y_test_class, y_pred_class))    
-        
-    elif param_DL == "batch":
-        st.markdown("""<h2><center><u>EFFET DE LA TAILLE DES BATCHS SUR LE MODÈLE DE DEEP LEARNING</u></h2></center>
-        <h4><u><font color = 'navy'>Récapitulatif du premier modèle :</font></u></h4>
-        <ul><li>Prédiction <b>jour de pluie</b> - précision : <b>76,4 %</b> ;  recall : <b>47,6 %</b></li>
-        <li>Prédiction <b>jour sans pluie</b> - précision : <b>86,9 %</b> ;  recall : <b>96,0 %</b></li></ul>
-        <br/><i>modélisation en cours...</i>🐊""", unsafe_allow_html = True)
-        
-        EPOCHS = 6
-        BATCHS = 320
-        
-        UNITS1 = 25
-        UNITS2 = 50
-        UNITS3 = None
-        UNITS4 = None
-        UNITS5 = None
-        UNITSOUT = 2
-        
-        ACTIV1 = "relu"
-        ACTIV2 = "relu"
-        ACTIV3 = None
-        ACTIV4 = None
-        ACTIV5 = None
-        
-        inputs = Input(shape = X_train_scaled.shape[1], name = "Input")
-        dense1 = Dense(units = UNITS1, activation = ACTIV1, kernel_initializer = "normal", name = "Dense_1")
-        dense2 = Dense(units = UNITS2, activation = ACTIV2, kernel_initializer = "normal", name = "Dense_2")
-        dense3 = Dense(units = UNITSOUT, activation = "softmax", name = "Dense_3")
-        
-        x = dense1(inputs)
-        x = dense2(x)
-        outputs = dense3(x)
-        
-        model = Model(inputs = inputs, outputs = outputs)
-        
-        model.compile(loss = "sparse_categorical_crossentropy", optimizer = "adam", metrics = ["accuracy"])
-        
-        training_history = model.fit(X_train_scaled, y_train, epochs = EPOCHS, batch_size = BATCHS, validation_data=(X_test_scaled,y_test))
-        
-        #calcul du score
-        score = model.evaluate(X_test_scaled, y_test)
-        
-        #prédiction
-        test_pred = model.predict(X_test_scaled)
-        
-        y_test_class = y_test
-        y_pred_class = np.argmax(test_pred, axis = 1)
-        
-        #Résultats
-        precis = classification_report(y_test_class, y_pred_class,output_dict=True)
-        
-        #Output
-        st.markdown("<i><center>...modélisation terminée !🦘</center></i> ", unsafe_allow_html = True)
-        st.markdown("""<h4><u><font color = 'navy'>Récapitulatif du modèle :</h4></u></font>
-        Ce modèle avait 2 couches denses :
-        <ul><li>la première avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
-        <li> la seconde avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
-        <li> la couche de sortie comportait <b>2 neurones</b> et une fonction d'activation <b>softmax</b>.</li>
-        <li> apprentissage sur <b>{} epochs</b> par batch de <b>{}</b>.</li></ul>
-        """.format(UNITS1, ACTIV1, UNITS2, ACTIV2, EPOCHS, BATCHS), unsafe_allow_html = True)
-        
-        model.summary()
-                         
-        st.markdown("""<h4><u><font color = 'navy'>Résultats du modèle :</h4></u></font>
-        <ul><li> Prédiction des <b>jours de pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>)</li>
-        <li> Prédiction des <b>jours sans pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>).
-        <li>La précision globale du modèle est de <b>{} %</b>.</li></ul>
-        L'entrainement sur des batchs de plus grande taille (ici 320 soit 10 fois plus grands par rapport au modèle initial) 
-        ne semble pas modifier les performances, en revanche la vitesse d'execution du modèle est considérablement réduite.
-        """.format(
-            round(100*precis["1"]["precision"],2),
-            round(100*precis["1"]["recall"],2),
-            round(100*precis["0"]["precision"],2),
-            round(100*precis["0"]["recall"],2),
-            round(100*precis["accuracy"],2)
-        ), unsafe_allow_html = True)
-        
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Rapport de classification</p</b></i>", unsafe_allow_html = True)
-        st.write(classification_report(y_test_class, y_pred_class))
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Matrice de confusion</p></b></i>", unsafe_allow_html = True)
-        st.write(confusion_matrix(y_test_class, y_pred_class))
-        
-    elif param_DL == "activation":
-        st.markdown("""<h2><center><u>EFFET DES FONCTIONS D'ACTIVATION SUR LE MODÈLE DE DEEP LEARNING</u></h2></center>
-        <h4><u><font color = 'navy'>Récapitulatif du premièr modèle :</font></u></h4>
-        <ul><li>Prédiction <b>jour de pluie</b> - précision : <b>76,4 %</b> ;  recall : <b>47,6 %</b></li>
-        <li>Prédiction <b>jour sans pluie</b> - précision : <b>86,9 %</b> ;  recall : <b>96,0 %</b></li></ul>
-        <br/><i>modélisation en cours...</i>🐊""", unsafe_allow_html = True)
-        
-        EPOCHS = 6
-        BATCHS = 32
-        
-        UNITS1 = 25
-        UNITS2 = 50
-        UNITS3 = None
-        UNITS4 = None
-        UNITS5 = None
-        UNITSOUT = 2
-        
-        ACTIV1 = "tanh"
-        ACTIV2 = "tanh"
-        ACTIV3 = None
-        ACTIV4 = None
-        ACTIV5 = None
-        
-        
-        inputs = Input(shape = X_train_scaled.shape[1], name = "Input")
-        dense1 = Dense(units = UNITS1, activation = ACTIV1, kernel_initializer = "normal", name = "Dense_1")
-        dense2 = Dense(units = UNITS2, activation = ACTIV2, kernel_initializer = "normal", name = "Dense_2")
-        dense3 = Dense(units = UNITSOUT, activation = "softmax", name = "Dense_3")
-        
-        x = dense1(inputs)
-        x = dense2(x)
-        outputs = dense3(x)
-        
-        model = Model(inputs = inputs, outputs = outputs)
-        model.compile(loss = "sparse_categorical_crossentropy", optimizer = "adam", metrics = ["accuracy"])
-        training_history = model.fit(X_train_scaled, y_train, epochs = EPOCHS, batch_size = BATCHS, validation_data=(X_test_scaled,y_test))
-        
-        #calcul du score
-        score = model.evaluate(X_test_scaled, y_test)
-        
-        #prédiction
-        test_pred = model.predict(X_test_scaled)
-        
-        y_test_class = y_test
-        y_pred_class = np.argmax(test_pred, axis = 1)
-        
-        #Résultats
-        precis = classification_report(y_test_class, y_pred_class,output_dict=True)
-        
-        #Output
-        st.markdown("<i><center>...modélisation terminée !🦘</center></i> ", unsafe_allow_html = True)
-        st.markdown("""<h4><u><font color = 'navy'>Récapitulatif du modèle :</h4></u></font>
-        Ce modèle avait 2 couches denses :
-        <ul><li>la première avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
-        <li> la seconde avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
-        <li> la couche de sortie comportait <b>2 neurones</b> et une fonction d'activation <b>softmax</b>.</li>
-        <li> apprentissage sur <b>{} epochs</b> par batch de <b>{}</b>.</li></ul>
-        """.format(UNITS1, ACTIV1, UNITS2, ACTIV2, EPOCHS, BATCHS), unsafe_allow_html = True)
-        
-        
-        st.markdown("""<h4><u><font color = 'navy'>Résultats du modèle :</h4></u></font>
-        <ul><li> Prédiction des <b>jours de pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>)</li>
-        <li> Prédiction des <b>jours sans pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>).
-        <li>La précision globale du modèle est de <b>{} %</b>.</li></ul>
-        L'activation des couches denses par la fonction tangente hyperbolique (au lieu de relu dans modèle initial) 
-        ne semble pas modifier les performances.
-        """.format(
-            round(100*precis["1"]["precision"],2),
-            round(100*precis["1"]["recall"],2),
-            round(100*precis["0"]["precision"],2),
-            round(100*precis["0"]["recall"],2),
-            round(100*precis["accuracy"],2)
-        ), unsafe_allow_html = True)
-        
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Rapport de classification</p</b></i>", unsafe_allow_html = True)
-        st.write(classification_report(y_test_class, y_pred_class))
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Matrice de confusion</p></b></i>", unsafe_allow_html = True)
-        st.write(confusion_matrix(y_test_class, y_pred_class))
-        
-    elif param_DL == "couches":
-        st.markdown("""<h2><center><u>EFFET DU NOMBRE DE COUCHES DE NEURONES SUR LE MODÈLE DE DEEP LEARNING</u></h2></center>
-        <h4><u><font color = 'navy'>Récapitulatif du premier modèle :</font></u></h4>
-        <ul><li>Prédiction <b>jour de pluie</b> - précision : <b>76,4 %</b> ;  recall : <b>47,6 %</b></li>
-        <li>Prédiction <b>jour sans pluie</b> - précision : <b>86,9 %</b> ;  recall : <b>96,0 %</b></li></ul>
-        <br/><i>modélisation en cours...</i>🐊""", unsafe_allow_html = True)
-        
-        EPOCHS = 6
-        BATCHS = 32
-        
-        UNITS1 = 25
-        UNITS2 = 50
-        UNITS3 = 50
-        UNITS4 = None
-        UNITS5 = None
-        UNITSOUT = 2
-        
-        ACTIV1 = "relu"
-        ACTIV2 = "relu"
-        ACTIV3 = "relu"
-        ACTIV4 = None
-        ACTIV5 = None
-        
-        
-        inputs = Input(shape = X_train_scaled.shape[1], name = "Input")
-        dense1 = Dense(units = UNITS1, activation = ACTIV1, kernel_initializer = "normal", name = "Dense_1")
-        dense2 = Dense(units = UNITS2, activation = ACTIV2, kernel_initializer = "normal", name = "Dense_2")
-        dense3 = Dense(units = UNITS3, activation = ACTIV3, kernel_initializer = "normal", name = "Dense_3")
-        dense4 = Dense(units = UNITSOUT, activation = "softmax", name = "Dense_4")
-        
-        x = dense1(inputs)
-        x = dense2(x)
-        x = dense3(x)
-        outputs = dense4(x)
-        
-        model = Model(inputs = inputs, outputs = outputs)
-        model.compile(loss = "sparse_categorical_crossentropy", optimizer = "adam", metrics = ["accuracy"])
-        training_history = model.fit(X_train_scaled, y_train, epochs = EPOCHS, batch_size = BATCHS, validation_data=(X_test_scaled,y_test))
-        
-        #calcul du score
-        score = model.evaluate(X_test_scaled, y_test)
-        
-        #prédiction
-        test_pred = model.predict(X_test_scaled)
-        
-        y_test_class = y_test
-        y_pred_class = np.argmax(test_pred, axis = 1)
-        
-        #Résultats
-        precis = classification_report(y_test_class, y_pred_class,output_dict=True)
-        
-        #Output
-        st.markdown("<i><center>...modélisation terminée !🦘</center></i> ", unsafe_allow_html = True)
-        st.markdown("""<h4><u><font color = 'navy'>Récapitulatif du modèle :</h4></u></font>
-        Ce modèle avait 3 couches denses :
-        <ul><li>la première avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
-        <li> la seconde avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
-        <li> la troisième avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
-        <li> la couche de sortie comportait <b>2 neurones</b> et une fonction d'activation <b>softmax</b>.</li>
-        <li> apprentissage sur <b>{} epochs</b> par batch de <b>{}</b>.</li></ul>
-        """.format(UNITS1, ACTIV1, UNITS2, ACTIV2, UNITS3, ACTIV3, EPOCHS, BATCHS), unsafe_allow_html = True)
-        
-        
-        st.markdown("""<h4><u><font color = 'navy'>Résultats du modèle :</h4></u></font color = 'navy>
-        <ul><li> Prédiction des <b>jours de pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>)</li>
-        <li> Prédiction des <b>jours sans pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>).
-        <li>La précision globale du modèle est de <b>{} %</b>.</li></ul>
-        L'activation des couches denses par la fonction tangente hyperbolique (au lieu de relu dans modèle initial) 
-        ne semble pas modifier les performances.
-        """.format(
-            round(100*precis["1"]["precision"],2),
-            round(100*precis["1"]["recall"],2),
-            round(100*precis["0"]["precision"],2),
-            round(100*precis["0"]["recall"],2),
-            round(100*precis["accuracy"],2)
-        ), unsafe_allow_html = True)
-        
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Rapport de classification</p</b></i>", unsafe_allow_html = True)
-        st.write(classification_report(y_test_class, y_pred_class))
-        st.markdown("<p style='font-family:Cambria; color:#3adfb2; font-size: 20px;'><i><b>Matrice de confusion</p></b></i>", unsafe_allow_html = True)
-        st.write(confusion_matrix(y_test_class, y_pred_class))
+    st.markdown("""<h2><center><u>EFFET DU NOMBRE DE NEURONES SUR LE MODÈLE DE DEEP LEARNING</u></h2></center>
+    <h4><u><font color = 'navy'>Récapitulatif du premier modèle :</font></u></h4>
+    <ul><li>Prédiction jour de pluie - précision : <b>{} %</b> ;  recall : <b>{} %</b></li>
+    <li>Prédiction jour de pluie - précision : <b>{} %</b> ;  recall : <b>{} %</b></li></ul>
+    <br/><i>modélisation en cours...</i>🐊""".format(precis_1, recall_1, precis_0, recall_0), unsafe_allow_html = True)
+    
+    EPOCHS = 6
+    BATCHS = 32
+    
+    UNITS1 = 250
+    UNITS2 = 500
+    UNITS3 = None
+    UNITS4 = None
+    UNITS5 = None
+    UNITSOUT = 2
+    
+    ACTIV1 = "relu"
+    ACTIV2 = "relu"
+    ACTIV3 = None
+    ACTIV4 = None
+    ACTIV5 = None
+    
+    inputs = Input(shape = X_train_scaled.shape[1], name = "Input")
+    dense1 = Dense(units = UNITS1, activation = ACTIV1, kernel_initializer = "normal", name = "Dense_1")
+    dense2 = Dense(units = UNITS2, activation = ACTIV2, kernel_initializer = "normal", name = "Dense_2")
+    dense3 = Dense(units = UNITSOUT, activation = "softmax", name = "Dense_3")
+    
+    
+    x = dense1(inputs)
+    x = dense2(x)
+    outputs = dense3(x)
+    
+    model = Model(inputs = inputs, outputs = outputs)
+    model.compile(loss = "sparse_categorical_crossentropy", optimizer = "adam", metrics = ["accuracy"])
+    training_history = model.fit(X_train_scaled, y_train, epochs = EPOCHS, batch_size = BATCHS, validation_data=(X_test_scaled,y_test))
+    
+    #calcul du score
+    score = model.evaluate(X_test_scaled, y_test)
+    
+    #prédiction
+    test_pred = model.predict(X_test_scaled)
+    
+    y_test_class = y_test
+    y_pred_class = np.argmax(test_pred, axis = 1)
+    
+    #Résultats
+    precis = classification_report(y_test_class, y_pred_class,output_dict=True)
+    
+    #Output
+    st.markdown("<i><center>...modélisation terminée !🦘</center></i> ", unsafe_allow_html = True)
+
+    st.markdown("""<h4><u><font color = 'navy'>Récapitulatif du modèle :</h4></u></font>
+    Ce modèle avait 2 couches denses :
+    <ul><li>la première avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
+    <li> la seconde avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
+    <li> la couche de sortie comportait <b>2 neurones</b> et une fonction d'activation <b>softmax</b>.</li>
+    <li> apprentissage sur <b>{} epochs</b> par batch de <b>{}</b>.</li></ul>
+    """.format(UNITS1, ACTIV1, UNITS2, ACTIV2, EPOCHS, BATCHS), unsafe_allow_html = True)
+            
+    st.markdown("""<h4><u><font color = 'navy'>Résultats du modèle :</h4></u></font>
+    <ul><li> Prédiction des <b>jours de pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>).</li>
+    <li> Prédiction des <b>jours sans pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>).</li>
+    <li>La précision globale du modèle est de <b>{} %</b>.</li></ul>
+    Le simple ajout de neurones (ici 10 fois plus nombreux dans chaque couche par rapport au modèle initial) 
+    ne semble pas modifier les performances.
+    """.format(
+        round(100*precis["1"]["precision"],2),
+        round(100*precis["1"]["recall"],2),
+        round(100*precis["0"]["precision"],2),
+        round(100*precis["0"]["recall"],2),
+        round(100*precis["accuracy"],2)
+    ), unsafe_allow_html = True)
+    
+    st.markdown("<h5><i>Rapport de classification</i></h5>", unsafe_allow_html = True)
+    st.write(classification_report(y_test_class, y_pred_class))
+    st.markdown("<h5><i>Matrice de confusion</i></h5>", unsafe_allow_html = True)
+    st.write(confusion_matrix(y_test_class, y_pred_class))
+    
+    st.markdown("""<h2><center><u>EFFET DU NOMBRE D'EPOCHS SUR LE MODÈLE DE DEEP LEARNING</u></h2></center>
+    <h4><u><font color = 'navy'>Récapitulatif du premier modèle :</font></u></h4>
+    <ul><li>Prédiction jour de pluie - précision : <b>{} %</b> ;  recall : <b>{} %</b></li>
+    <li>Prédiction jour de pluie - précision : <b>{} %</b> ;  recall : <b>{} %</b></li></ul>
+    <br/><i>modélisation en cours...</i>🐊""".format(precis_1, recall_1, precis_0, recall_0), unsafe_allow_html = True)  
+    
+    EPOCHS = 18
+    BATCHS = 32
+    
+    UNITS1 = 25
+    UNITS2 = 50
+    UNITS3 = None
+    UNITS4 = None
+    UNITS5 = None
+    UNITSOUT = 2
+    
+    ACTIV1 = "relu"
+    ACTIV2 = "relu"
+    ACTIV3 = None
+    ACTIV4 = None
+    ACTIV5 = None
+    
+    inputs = Input(shape = X_train_scaled.shape[1], name = "Input")
+    dense1 = Dense(units = UNITS1, activation = ACTIV1, kernel_initializer = "normal", name = "Dense_1")
+    dense2 = Dense(units = UNITS2, activation = ACTIV2, kernel_initializer = "normal", name = "Dense_2")
+    dense3 = Dense(units = UNITSOUT, activation = "softmax", name = "Dense_3")
+    
+    x = dense1(inputs)
+    x = dense2(x)
+    outputs = dense3(x)
+    
+    model = Model(inputs = inputs, outputs = outputs)
+    model.compile(loss = "sparse_categorical_crossentropy", optimizer = "adam", metrics = ["accuracy"])
+    training_history = model.fit(X_train_scaled, y_train, epochs = EPOCHS, batch_size = BATCHS, validation_data=(X_test_scaled,y_test))
+    
+    #calcul du score
+    score = model.evaluate(X_test_scaled, y_test)
+    
+    #prédiction
+    test_pred = model.predict(X_test_scaled)
+    
+    y_test_class = y_test
+    y_pred_class = np.argmax(test_pred, axis = 1)
+    
+    #Résultats
+    precis = classification_report(y_test_class, y_pred_class,output_dict=True)
+    
+    #Output
+    st.markdown("<i><center>...modélisation terminée !🦘</center></i> ", unsafe_allow_html = True)
+
+    st.markdown("""<h4><u><font color = 'navy'>Récapitulatif du modèle :</h4></u></font>
+    Ce modèle avait 2 couches denses :
+    <ul><li>la première avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
+    <li> la seconde avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
+    <li> la couche de sortie comportait <b>2 neurones</b> et une fonction d'activation <b>softmax</b>.</li>
+    <li> apprentissage sur <b>{} epochs</b> par batch de <b>{}</b>.</li></ul>
+    """.format(UNITS1, ACTIV1, UNITS2, ACTIV2, EPOCHS, BATCHS), unsafe_allow_html = True)
+    
+    model.summary()
+    
+    st.markdown("""<h4><u><font color = 'navy'>Résultats du modèle :</h4></u></font>
+    <ul><li> Prédiction des <b>jours de pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>)</li>
+    <li> Prédiction des <b>jours sans pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>).
+    <li>La précision globale du modèle est de <b>{} %</b>.</li></ul>
+    L'entrainement sur un nombre plus important d'epochs (ici 18 soit 3 fois plus par rapport au modèle initial) 
+    ne semble pas modifier les performances.
+    """.format(
+        round(100*precis["1"]["precision"],2),
+        round(100*precis["1"]["recall"],2),
+        round(100*precis["0"]["precision"],2),
+        round(100*precis["0"]["recall"],2),
+        round(100*precis["accuracy"],2)
+    ), unsafe_allow_html = True)
+    
+    st.markdown("<h5><i>Rapport de classification</i></h5>", unsafe_allow_html = True)
+    st.write(classification_report(y_test_class, y_pred_class))
+    st.markdown("<h5><i>Matrice de confusion</i></h5>", unsafe_allow_html = True)
+    st.write(confusion_matrix(y_test_class, y_pred_class))
+    
+    st.markdown("""<h2><center><u>EFFET DE LA TAILLE DES BATCHS SUR LE MODÈLE DE DEEP LEARNING</u></h2></center>
+    <h4><u><font color = 'navy'>Récapitulatif du premier modèle :</font></u></h4>
+    <ul><li>Prédiction jour de pluie - précision : <b>{} %</b> ;  recall : <b>{} %</b></li>
+    <li>Prédiction jour de pluie - précision : <b>{} %</b> ;  recall : <b>{} %</b></li></ul>
+    <br/><i>modélisation en cours...</i>🐊""".format(precis_1, recall_1, precis_0, recall_0), unsafe_allow_html = True)
+    
+    EPOCHS = 6
+    BATCHS = 320
+    
+    UNITS1 = 25
+    UNITS2 = 50
+    UNITS3 = None
+    UNITS4 = None
+    UNITS5 = None
+    UNITSOUT = 2
+    
+    ACTIV1 = "relu"
+    ACTIV2 = "relu"
+    ACTIV3 = None
+    ACTIV4 = None
+    ACTIV5 = None
+    
+    inputs = Input(shape = X_train_scaled.shape[1], name = "Input")
+    dense1 = Dense(units = UNITS1, activation = ACTIV1, kernel_initializer = "normal", name = "Dense_1")
+    dense2 = Dense(units = UNITS2, activation = ACTIV2, kernel_initializer = "normal", name = "Dense_2")
+    dense3 = Dense(units = UNITSOUT, activation = "softmax", name = "Dense_3")
+    
+    x = dense1(inputs)
+    x = dense2(x)
+    outputs = dense3(x)
+    
+    model = Model(inputs = inputs, outputs = outputs)
+    
+    model.compile(loss = "sparse_categorical_crossentropy", optimizer = "adam", metrics = ["accuracy"])
+    
+    training_history = model.fit(X_train_scaled, y_train, epochs = EPOCHS, batch_size = BATCHS, validation_data=(X_test_scaled,y_test))
+    
+    #calcul du score
+    score = model.evaluate(X_test_scaled, y_test)
+    
+    #prédiction
+    test_pred = model.predict(X_test_scaled)
+    
+    y_test_class = y_test
+    y_pred_class = np.argmax(test_pred, axis = 1)
+    
+    #Résultats
+    precis = classification_report(y_test_class, y_pred_class,output_dict=True)
+    
+    #Output
+    st.markdown("<i><center>...modélisation terminée !🦘</center></i> ", unsafe_allow_html = True)
+    st.markdown("""<h4><u><font color = 'navy'>Récapitulatif du modèle :</h4></u></font>
+    Ce modèle avait 2 couches denses :
+    <ul><li>la première avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
+    <li> la seconde avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
+    <li> la couche de sortie comportait <b>2 neurones</b> et une fonction d'activation <b>softmax</b>.</li>
+    <li> apprentissage sur <b>{} epochs</b> par batch de <b>{}</b>.</li></ul>
+    """.format(UNITS1, ACTIV1, UNITS2, ACTIV2, EPOCHS, BATCHS), unsafe_allow_html = True)
+    
+    model.summary()
+                     
+    st.markdown("""<h4><u><font color = 'navy'>Résultats du modèle :</h4></u></font>
+    <ul><li> Prédiction des <b>jours de pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>)</li>
+    <li> Prédiction des <b>jours sans pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>).
+    <li>La précision globale du modèle est de <b>{} %</b>.</li></ul>
+    L'entrainement sur des batchs de plus grande taille (ici 320 soit 10 fois plus grands par rapport au modèle initial) 
+    ne semble pas modifier les performances, en revanche la vitesse d'execution du modèle est considérablement réduite.
+    """.format(
+        round(100*precis["1"]["precision"],2),
+        round(100*precis["1"]["recall"],2),
+        round(100*precis["0"]["precision"],2),
+        round(100*precis["0"]["recall"],2),
+        round(100*precis["accuracy"],2)
+    ), unsafe_allow_html = True)
+    
+    st.markdown("<h5><i>Rapport de classification</i></h5>", unsafe_allow_html = True)
+    st.write(classification_report(y_test_class, y_pred_class))
+    st.markdown("<h5><i>Matrice de confusion</i></h5>", unsafe_allow_html = True)
+    st.write(confusion_matrix(y_test_class, y_pred_class))
+    
+    st.markdown("""<h2><center><u>EFFET DES FONCTIONS D'ACTIVATION SUR LE MODÈLE DE DEEP LEARNING</u></h2></center>
+    <h4><u><font color = 'navy'>Récapitulatif du premier modèle :</font></u></h4>
+    <ul><li>Prédiction jour de pluie - précision : <b>{} %</b> ;  recall : <b>{} %</b></li>
+    <li>Prédiction jour de pluie - précision : <b>{} %</b> ;  recall : <b>{} %</b></li></ul>
+    <br/><i>modélisation en cours...</i>🐊""".format(precis_1, recall_1, precis_0, recall_0), unsafe_allow_html = True)
+    
+    EPOCHS = 6
+    BATCHS = 32
+    
+    UNITS1 = 25
+    UNITS2 = 50
+    UNITS3 = None
+    UNITS4 = None
+    UNITS5 = None
+    UNITSOUT = 2
+    
+    ACTIV1 = "tanh"
+    ACTIV2 = "tanh"
+    ACTIV3 = None
+    ACTIV4 = None
+    ACTIV5 = None
+    
+    
+    inputs = Input(shape = X_train_scaled.shape[1], name = "Input")
+    dense1 = Dense(units = UNITS1, activation = ACTIV1, kernel_initializer = "normal", name = "Dense_1")
+    dense2 = Dense(units = UNITS2, activation = ACTIV2, kernel_initializer = "normal", name = "Dense_2")
+    dense3 = Dense(units = UNITSOUT, activation = "softmax", name = "Dense_3")
+    
+    x = dense1(inputs)
+    x = dense2(x)
+    outputs = dense3(x)
+    
+    model = Model(inputs = inputs, outputs = outputs)
+    model.compile(loss = "sparse_categorical_crossentropy", optimizer = "adam", metrics = ["accuracy"])
+    training_history = model.fit(X_train_scaled, y_train, epochs = EPOCHS, batch_size = BATCHS, validation_data=(X_test_scaled,y_test))
+    
+    #calcul du score
+    score = model.evaluate(X_test_scaled, y_test)
+    
+    #prédiction
+    test_pred = model.predict(X_test_scaled)
+    
+    y_test_class = y_test
+    y_pred_class = np.argmax(test_pred, axis = 1)
+    
+    #Résultats
+    precis = classification_report(y_test_class, y_pred_class,output_dict=True)
+    
+    #Output
+    st.markdown("<i><center>...modélisation terminée !🦘</center></i> ", unsafe_allow_html = True)
+    st.markdown("""<h4><u><font color = 'navy'>Récapitulatif du modèle :</h4></u></font>
+    Ce modèle avait 2 couches denses :
+    <ul><li>la première avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
+    <li> la seconde avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
+    <li> la couche de sortie comportait <b>2 neurones</b> et une fonction d'activation <b>softmax</b>.</li>
+    <li> apprentissage sur <b>{} epochs</b> par batch de <b>{}</b>.</li></ul>
+    """.format(UNITS1, ACTIV1, UNITS2, ACTIV2, EPOCHS, BATCHS), unsafe_allow_html = True)
+    
+    
+    st.markdown("""<h4><u><font color = 'navy'>Résultats du modèle :</h4></u></font>
+    <ul><li> Prédiction des <b>jours de pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>)</li>
+    <li> Prédiction des <b>jours sans pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>).
+    <li>La précision globale du modèle est de <b>{} %</b>.</li></ul>
+    L'activation des couches denses par la fonction tangente hyperbolique (au lieu de relu dans modèle initial) 
+    ne semble pas modifier les performances.
+    """.format(
+        round(100*precis["1"]["precision"],2),
+        round(100*precis["1"]["recall"],2),
+        round(100*precis["0"]["precision"],2),
+        round(100*precis["0"]["recall"],2),
+        round(100*precis["accuracy"],2)
+    ), unsafe_allow_html = True)
+    
+    st.markdown("<h5><i>Rapport de classification</i></h5>", unsafe_allow_html = True)
+    st.write(classification_report(y_test_class, y_pred_class))
+    st.markdown("<h5><i>Matrice de confusion</i></h5>", unsafe_allow_html = True)
+    st.write(confusion_matrix(y_test_class, y_pred_class))
+    
+    st.markdown("""<h2><center><u>EFFET DU NOMBRE DE COUCHES DE NEURONES SUR LE MODÈLE DE DEEP LEARNING</u></h2></center>
+    <h4><u><font color = 'navy'>Récapitulatif du premier modèle :</font></u></h4>
+    <ul><li>Prédiction jour de pluie - précision : <b>{} %</b> ;  recall : <b>{} %</b></li>
+    <li>Prédiction jour de pluie - précision : <b>{} %</b> ;  recall : <b>{} %</b></li></ul>
+    <br/><i>modélisation en cours...</i>🐊""".format(precis_1, recall_1, precis_0, recall_0), unsafe_allow_html = True)
+    
+    EPOCHS = 6
+    BATCHS = 32
+    
+    UNITS1 = 25
+    UNITS2 = 50
+    UNITS3 = 50
+    UNITS4 = None
+    UNITS5 = None
+    UNITSOUT = 2
+    
+    ACTIV1 = "relu"
+    ACTIV2 = "relu"
+    ACTIV3 = "relu"
+    ACTIV4 = None
+    ACTIV5 = None
+    
+    
+    inputs = Input(shape = X_train_scaled.shape[1], name = "Input")
+    dense1 = Dense(units = UNITS1, activation = ACTIV1, kernel_initializer = "normal", name = "Dense_1")
+    dense2 = Dense(units = UNITS2, activation = ACTIV2, kernel_initializer = "normal", name = "Dense_2")
+    dense3 = Dense(units = UNITS3, activation = ACTIV3, kernel_initializer = "normal", name = "Dense_3")
+    dense4 = Dense(units = UNITSOUT, activation = "softmax", name = "Dense_4")
+    
+    x = dense1(inputs)
+    x = dense2(x)
+    x = dense3(x)
+    outputs = dense4(x)
+    
+    model = Model(inputs = inputs, outputs = outputs)
+    model.compile(loss = "sparse_categorical_crossentropy", optimizer = "adam", metrics = ["accuracy"])
+    training_history = model.fit(X_train_scaled, y_train, epochs = EPOCHS, batch_size = BATCHS, validation_data=(X_test_scaled,y_test))
+    
+    #calcul du score
+    score = model.evaluate(X_test_scaled, y_test)
+    
+    #prédiction
+    test_pred = model.predict(X_test_scaled)
+    
+    y_test_class = y_test
+    y_pred_class = np.argmax(test_pred, axis = 1)
+    
+    #Résultats
+    precis = classification_report(y_test_class, y_pred_class,output_dict=True)
+    
+    #Output
+    st.markdown("<i><center>...modélisation terminée !🦘</center></i> ", unsafe_allow_html = True)
+    st.markdown("""<h4><u><font color = 'navy'>Récapitulatif du modèle :</h4></u></font>
+    Ce modèle avait 3 couches denses :
+    <ul><li>la première avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
+    <li> la seconde avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
+    <li> la troisième avec <b>{} neurones</b> et une fonction d'activation <b>{}</b>.</li>
+    <li> la couche de sortie comportait <b>2 neurones</b> et une fonction d'activation <b>softmax</b>.</li>
+    <li> apprentissage sur <b>{} epochs</b> par batch de <b>{}</b>.</li></ul>
+    """.format(UNITS1, ACTIV1, UNITS2, ACTIV2, UNITS3, ACTIV3, EPOCHS, BATCHS), unsafe_allow_html = True)
+    
+    
+    st.markdown("""<h4><u><font color = 'navy'>Résultats du modèle :</h4></u></font color = 'navy>
+    <ul><li> Prédiction des <b>jours de pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>)</li>
+    <li> Prédiction des <b>jours sans pluie</b> avec une précision de <b>{} %</b> (<i>recall = <b>{} %</b></i>).
+    <li>La précision globale du modèle est de <b>{} %</b>.</li></ul>
+    L'activation des couches denses par la fonction tangente hyperbolique (au lieu de relu dans modèle initial) 
+    ne semble pas modifier les performances.
+    """.format(
+        round(100*precis["1"]["precision"],2),
+        round(100*precis["1"]["recall"],2),
+        round(100*precis["0"]["precision"],2),
+        round(100*precis["0"]["recall"],2),
+        round(100*precis["accuracy"],2)
+    ), unsafe_allow_html = True)
+    
+    st.markdown("<h5><i>Rapport de classification</i></h5>", unsafe_allow_html = True)
+    st.write(classification_report(y_test_class, y_pred_class))
+    st.markdown("<h5><i>Matrice de confusion</i></h5>", unsafe_allow_html = True)
+    st.write(confusion_matrix(y_test_class, y_pred_class))
     
 elif nav == "Machine learning":
 
