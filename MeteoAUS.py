@@ -1908,7 +1908,8 @@ elif nav == "Machine learning":
     pd.set_option('max_columns', None) 
         
     st.markdown('<h4><font color = "navy"><u>Gestion des valeurs manquantes</u></font></h4>', unsafe_allow_html=True)
-    
+   
+    st.write(df.head(20))
     nan_val = st.button("Voir la répartition des NaN selon les variables")
         
     if nan_val: 
