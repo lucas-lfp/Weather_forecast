@@ -285,9 +285,9 @@ elif nav == "Description du dataset":
         
         #Visualisation graphique
         st.markdown("<h4><u><font color = 'navy'>Visualisation graphique :</u></h4>",unsafe_allow_html=True)
+        st.markdown("<h5><i>Variation mensuelle des températures</i></h5>", unsafe_allow_html = True)
         
         fig_temp = plt.figure(figsize = (10, 15))
-        plt.suptitle("Variation mensuelle des températures", fontsize = 24, fontweight = "bold")
         plt.subplot(3,1,1)
         plt.title("Températures maximales et minimales.", fontsize = 18, pad = 20)
         sns.lineplot(x = "Month", y = "MaxTemp", data = df, label = "Température maximale", color = "orange", marker = "o")
@@ -414,10 +414,9 @@ elif nav == "Description du dataset":
         
         #Visualisation graphique
         st.markdown("<h4><u><font color = 'navy'>Visualisation graphique :</u></h4>",unsafe_allow_html=True)
-        
+        st.markdown("<h5><i>Distribution des variables Rainfall, Evaporation, Humidity9am et Humidity3pm</i></h5>", unsafe_allow_html = True)
         #histogrammes
         fig_precipitations_1 = plt.figure(figsize = (13,13))
-        plt.suptitle("Distribution des variables Rainfall, Evaporation, Humidity9am et Humidity3pm", fontsize = 22, fontweight = "bold")
         
         plt.subplot(221)
         plt.title("Hauteur des précipitations\n (les jours de pluie)", fontsize = 18, pad = 20)
@@ -461,8 +460,8 @@ elif nav == "Description du dataset":
         st.pyplot(fig_precipitations_1);
         
         #boxplots
+        st.markdown("<h5><i>Distribution comparée en fonction de la pluie</i></h5>", unsafe_allow_html = True)
         fig_precipitations_2 = plt.figure(figsize = (11,11))
-        plt.suptitle("Distribution comparée en fonction de la pluie", fontsize = 22, fontweight = "bold")
         
         plt.subplot(221)
         plt.title("Hauteur des précipitations", fontsize = 18, pad = 20)
@@ -564,10 +563,9 @@ elif nav == "Description du dataset":
         
         #Visualisation graphique
         st.markdown("<h4><u><font color = 'navy'>Visualisation graphique :</u></h4>",unsafe_allow_html=True)
-        
+        st.markdown("<h5><i>Distribution des variables Sunshine, Cloud9am et Cloud3pm</i></h5>", unsafe_allow_html = True)
         #histogrammes
         fig_soleil_1 = plt.figure(figsize = (12,12))
-        plt.suptitle("Distribution des variables Sunshine, Cloud9am et Cloud3pm", fontsize = 22)
         
         plt.subplot(221)
         plt.title("Ensoleillement", fontsize = 18, pad = 20)
@@ -603,8 +601,8 @@ elif nav == "Description du dataset":
         st.pyplot(fig_soleil_1);
         
         #boxplots
+        st.markdown("<h5><i>Distribution comparée en fonction de la pluie</i></h5>", unsafe_allow_html = True)
         fig_soleil_2 = plt.figure(figsize = (12,12))
-        plt.suptitle("Distribution comparée en fonction de la pluie", fontsize = 22)
         
         plt.subplot(221)
         plt.title("Ensoleillement", fontsize = 18, pad = 20)
@@ -737,10 +735,9 @@ elif nav == "Description du dataset":
         
         #Visualisation graphique
         st.markdown("<h4><u><font color = 'navy'>Visualisation graphique :</u></h4>", unsafe_allow_html=True)
-        
+        st.markdown("<h5><i>Distribution des variables WindGustSpeed, WindSpeed9am et WindSpeed3pm</i></h5>", unsafe_allow_html = True)
         #histogrammes
         fig_vent_1 = plt.figure(figsize = (12,12))
-        plt.suptitle("Distribution des variables WindGustSpeed, WindSpeed9am et WindSpeed3pm", fontsize = 22, fontweight = "bold")
         
         plt.subplot(221)
         plt.title("Vitesse du vent\n (plus forte rafale)", fontsize = 18, pad = 20)
@@ -784,8 +781,8 @@ elif nav == "Description du dataset":
         df.WindSpeed3pm.describe()["max"]), unsafe_allow_html=True)
         
         #boxplots
+        st.markdown("<h5><i>Distribution comparée en fonction de la pluie</i></h5>", unsafe_allow_html = True)
         fig_vent_2 = plt.figure(figsize = (12,12))
-        plt.suptitle("Distribution comparée en fonction de la pluie", fontsize = 22, fontweight = "bold")
         
         plt.subplot(221)
         plt.title("Vitesse du vent\n (plus forte rafale)", fontsize = 18, pad = 20)
@@ -862,10 +859,10 @@ elif nav == "Description du dataset":
         
         #Visualisation graphique
         st.markdown("<h4><u><font color = 'navy'>Visualisation graphique :</u></h4>", unsafe_allow_html=True)
+        st.markdwon("<h5><i>Distribution des variables Pressure9am et Pressure3pm</i></h5>", unsafe_allow_html = True)
         
         #histogrammes
         fig_pression_1 = plt.figure(figsize = (12,12))
-        plt.suptitle("Distribution des variables Pressure9am et Pressure3pm", fontsize = 22, fontweight = 'bold')
         
         plt.subplot(221)
         plt.title("Pression atmosphérique\n (relevée à 9h)", fontsize = 18, pad = 20)
@@ -898,8 +895,8 @@ elif nav == "Description du dataset":
         st.pyplot(fig_pression_1);
         
         #boxplots
+        st.markdown("<h5><i>Distribution comparée en fonction de la pluie</i></h5>", unsafe_allow_hmtl = True)
         fig_pression_2 = plt.figure(figsize = (12,6))
-        plt.suptitle("Distribution comparée en fonction de la pluie", fontsize = 22, fontweight = 'bold')
         
         plt.subplot(121)
         plt.title("Pression atmosphérique\n (relevée à 9h)", fontsize = 18, pad = 20)
