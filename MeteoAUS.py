@@ -858,7 +858,7 @@ elif nav == "Description du dataset":
         
         #Visualisation graphique
         st.markdown("<h4><u><font color = 'navy'>Visualisation graphique :</u></h4>", unsafe_allow_html=True)
-        st.markdwon("<h5><i>Distribution des variables Pressure9am et Pressure3pm</i></h5>", unsafe_allow_html = True)
+        st.markdown("<h5><i>Distribution des variables Pressure9am et Pressure3pm</i></h5>", unsafe_allow_html = True)
         
         #histogrammes
         fig_pression_1 = plt.figure(figsize = (12,12))
