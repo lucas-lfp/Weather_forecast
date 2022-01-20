@@ -1,4 +1,4 @@
-# Test_meteo
+# Weather_forecast
 Projet de machine learning réalisé en collaboration avec Lise Aujoulat (https://github.com/Lise-AJT), lors de notre formation data scientist. Il s'agissait de développer des modèles de machine et deep learning pour la prédiction des jours de pluie en Australie.
 Vous trouverez différents éléments dans ce dossier, notamment le code mis en production pour le projet au format Jupyter Notebook, ainsi que le rapport final au format PDF.
 
