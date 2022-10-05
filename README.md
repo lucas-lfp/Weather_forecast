@@ -1,26 +1,26 @@
 # Weather_forecast
-Projet de <b>machine learning</b> réalisé en collaboration avec <b>Lise Aujoulat</b> (https://github.com/Lise-AJT), lors de notre formation de data scientist. Il s'agissait de développer des modèles de machine et deep learning pour la <b>prédiction des jours de pluie</b> en Australie.
-Vous trouverez différents éléments dans ce dossier, notamment le <b>code</b> mis en production pour le projet au format <b>Jupyter Notebook</b>, ainsi que le <b>rapport de projet</b> au format PDF (<i>WeatherAUS_Rapport.pdf</i>).
+<b>Data science project</b> carried out in collaboration with my friend <b>Lise Aujoulat</b> (https://github.com/Lise-AJT), during our data scientist training. The aim was to develop <b>machine learning</b> and <b>deep learning</b> models for <b>predicting rainy days</b> in Australia.
+You will find various elements in this rep, in particular the code put in production for the project in Jupyter Notebook format, as well as the project report in PDF format (<i>WeatherAUS_Rapport.pdf</i>).
 
-Nous avons travaillé à partir de la base de données "<i>Rain in Australia</i>" disponible sur https://www.kaggle.com/jsphyg/weather-dataset-rattle-package.
-<h4>Démarche suivie :</h4>
+We worked from the <i>"Rain in Australia"</i> database available on  https://www.kaggle.com/jsphyg/weather-dataset-rattle-package.
+<h4>Approach followed:</h4>
 <ol>
-  <li>Prise en main du sujet, compréhension du contenu de la base de données ;</li>
-  <li>Analyse descriptive des données et réalisation de visuels ;</li>
-  <li>Recherche du modèle de machine learning le plus adapté ;</li>
-  <li>Préprocessing des données et modélisation <b>Random Forest</b> ;</li>
-  <li>Essai d'amélioration des performances du modèle avec révision du préprocessing ;</li>
-  <li>Réalisation d'un modèle de deep Learning.</li>
+  <li>Become familiar with the subject, understand the contents of the database.;</li>
+  <li>Exploratory data analysis, includid data viz production;</li>
+  <li>Search for the most appropriate machine learning model;</li>
+  <li>Data pre-processing and Random Forest modelling;</li>
+  <li>Attempt to improve the performance of the model with revised preprocessing;</li>
+  <li>Development of a deep learning model.</li>
 </ol>
   
-<h4> Contenu du code utilisé :</h4>
+<h4> Content available in this rep:</h4>
 <ol>
-  <li>Description et analyse statistique des données - <i>WeatherAUS_data_description.ipynb</i> ;</li>
-  <li>Modélisation machine learning (random forest) - <i>WeatherAUS_ML.ipynb</i> ;</li>
-  <li>Modélisation deep learning - <i>WeatherAUS_DL.ipynb</i>;</li>
-  <li>Code employé pour la conception de l'application Streamlit - <i>MeteoAUS.py</i>.</li>
+  <li>Exploratory data analysis and data viz - <i>WeatherAUS_data_description.ipynb</i> ;</li>
+  <li>Machine learning model (random forest) - <i>WeatherAUS_ML.ipynb</i> ;</li>
+  <li>Deep learning model - <i>WeatherAUS_DL.ipynb</i>;</li>
+  <li>Streamlit app code - <i>MeteoAUS.py</i>.</li>
 </ol>
 
-A noter que le code utilisé pour déterminer le meilleur modèle de machine learning, ainsi que le code pour l'analyse de séries temporelles n'est pas rendu disponible ici, toutefois la démarche effectuée est expliquée dans le rapport de projet en PDF.
+Note that the code used to determine the best machine learning model, as well as the code for the time series analysis is not made available here, however the approach taken is explained in the project report in PDF.
 
-<b>Bonne lecture ! 🐊</b>
+<b>Bonne lecture ! Enjoy your reading! 🐊</b>
