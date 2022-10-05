@@ -17,7 +17,8 @@ Nous avons travaillé à partir de la base de données "<i>Rain in Australia</i>
 <ol>
   <li>Description et analyse statistique des données - <i>WeatherAUS_data_description.ipynb</i> ;</li>
   <li>Modélisation machine learning (random forest) - <i>WeatherAUS_ML.ipynb</i> ;</li>
-  <li>Modélisation deep learning - <i>WeatherAUS_DL.ipynb</i>.</li>
+  <li>Modélisation deep learning - <i>WeatherAUS_DL.ipynb</i>;</li>
+  <li>Code employé pour la conception de l'application Streamlit - <i>MeteoAUS.py</i>.</li>
 </ol>
 
 A noter que le code utilisé pour déterminer le meilleur modèle de machine learning, ainsi que le code pour l'analyse de séries temporelles n'est pas rendu disponible ici, toutefois la démarche effectuée est expliquée dans le rapport de projet en PDF.
